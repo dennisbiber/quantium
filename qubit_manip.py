@@ -19,12 +19,39 @@ dev3 = qml.device("default.qubit",
 def circuit0(phi, theta):
 	qml.RX(phi[0], wires=0)
 	qml.RY(phi[1], wires=1)
-	# qml.RZ(phi[2], wires=2)
 	qml.CNOT(wires=[0, 1])
 	qml.PhaseShift(theta, wires=0)
 	return qml.expval(qml.PauliZ(0))
 
 phi = np.array([.5,.2,.4])
+theta = .2
+dcircuit = qml.grad(circuit0)
+dcircuit(phi, theta)
+print(dir(dcircuit))
+print(dcircuit._grad_with_forward)
+
+@qml.qnode(dev2)
+def ciruit1(params, theta):
+	qml.RX(params[0], wires=0)
+	qml.CNOT(wires=[0, 1])
+	qml.PhaseShift(theta, wires=0)
+	return qml.expval(qml._PauliZ(0))
+
+phi = np.array([.8,.15,.5])
+theta = .1
+dcircuit = qml.grad(circuit1)
+dcircuit(phi, theta)
+print(dir(dcircuit))
+print(dcircuit._grad_with_forward)
+
+@qml.qnode(dev3)
+def ciruit2(params, theta):
+	qml.RX(params[0], wires=0)
+	qml.CNOT(wires=[0, 1])
+	qml.PhaseShift(theta, wires=0)
+	return qml.expval(qml._PauliZ(0))
+
+phi = np.array([.95,.05,.25])
 theta = .2
 dcircuit = qml.grad(circuit0)
 dcircuit(phi, theta)
